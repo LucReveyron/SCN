@@ -19,7 +19,7 @@ class SmartCamera:
 	def __init__(self):
 
 		self.cameras = IpCameraManager()
-		self.cameras.load("/Users/lucreveyron/Documents/SCN/scn/config/ipcamera_list.txt")
+		self.cameras.load("/Users/lucreveyron/Documents/SCN/scn/config/camera_config.toml")
 		self.cameras.start_capture()
 
 		self.detector = Detector()

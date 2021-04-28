@@ -6,6 +6,7 @@
 """
 
 import cv2
+import toml
 
 from cameravideostream import CameraVideoStream
 
@@ -55,7 +56,7 @@ class IpCameraManager:
 				self.camera_list[ip_camera[i].return_user()] = ip_camera[i]
 
 	def load(self, file):
-		ip_cameras = generate_ip_camera_from_txt(file)
+		ip_cameras = generate_ip_camera_from_toml(file)
 		self.add_ip_camera(ip_cameras)
 		print("[INFO] Camera list load \n")
 
@@ -85,7 +86,7 @@ class IpCameraManager:
 		return frames
 
 def generate_ip_camera_from_txt(file):
-	# read txt file with list of ip cameras and build IpCamera object
+	# read .txt file with list of ip cameras and build IpCamera object
 	list_ip_cameras = []
 
 	with open(file) as input_file:
@@ -98,3 +99,21 @@ def generate_ip_camera_from_txt(file):
 
 
 	return list_ip_cameras
+
+def generate_ip_camera_from_toml(file):
+	# read .toml file with list of ip cameras and build IpCamera object
+	list_ip_cameras = []
+
+	dict_toml = toml.load(file)
+
+	for key in dict_toml:
+		list_ip_cameras.append(IpCamera())
+		camera = dict_toml[key]
+		adress = camera["ip"]
+		username = camera["username"]
+		password = camera["password"]
+		list_ip_cameras[-1].add_all(adress, username, password)
+
+	return list_ip_cameras
+
+
