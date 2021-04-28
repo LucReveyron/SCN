@@ -1,0 +1,8 @@
+# Config file for the ip cameras
+
+[camera1]
+ip = "192.168.1.33"
+username = "USERNAME"
+password = "PASSWORD"
+
+

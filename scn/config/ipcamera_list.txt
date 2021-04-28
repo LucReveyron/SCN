@@ -1,1 +1,0 @@
-192.168.1.30;Smartcap1;ProjectSCN2021

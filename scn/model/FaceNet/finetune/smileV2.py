@@ -1,6 +1,8 @@
 import os
 import cv2
 
+from noise_generator import noisy
+
 path = './photos/'
 
 print('First enter your first and last name without capital letter : \n')
@@ -77,6 +79,15 @@ for img in list_pictures:
         dst = cv2.warpAffine(img,M,(cols,rows))
         img_name = "{}.jpg".format(img_counter)
         cv2.imwrite(os.path.join(path , img_name), dst)
+        img_counter += 1
+
+    # Add noise
+    noise_list = ["gauss", "s&p", "poisson", "speckle"]
+    
+    for noise in noise_list:
+        im_noisy = noisy(noise, img)
+        img_name = "{}.jpg".format(img_counter)
+        cv2.imwrite(os.path.join(path , img_name), im_noisy)
         img_counter += 1
 
 

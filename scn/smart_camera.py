@@ -13,7 +13,7 @@ from model.MobileNetSSD.detectionV2 import Detector
 from centroidtracker import CentroidTracker
 from model.FaceNet.recognition import face_match
 
-CLOSER = 0.2 # Distance allowed to trust the face_match
+CLOSER = 0.8 # Distance allowed to trust the face_match
 
 class SmartCamera:
 	def __init__(self):
@@ -48,10 +48,10 @@ class SmartCamera:
 			# Compute bounding box 
 			self.frames[camera], bounding_box = self.detector.detect(self.frames[camera])
 			if bounding_box:
-				print('bounding : ',len(bounding_box),'\n')
+				#print('bounding : ',len(bounding_box),'\n')
 				people, self.boxes = self.tracker.update(bounding_box)
-				print('box : ',len(self.boxes),'\n')
-				print('people',len(people),'\n')
+				#print('box : ',len(self.boxes),'\n')
+				#print('people',len(people),'\n')
 
 				for person_ID in people.keys():
 
@@ -68,7 +68,8 @@ class SmartCamera:
 
 						# Try to recognize the person
 						result = face_match(part_frame,'/Users/lucreveyron/Documents/SCN/scn/model/FaceNet/finetune/data.pt')
-						if result[0] is not None and result[1] < CLOSER:
+						print(result[1])
+						if result[0] is not None and result[1] > CLOSER:
 							# Define the name of the person
 							self.people_tracked[person_ID] = result[0]
 				self.all_people[camera] = self.people_tracked
