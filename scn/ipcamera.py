@@ -38,7 +38,7 @@ class IpCamera:
 			adress = self.ip_camera['adress'])
 
 		self.cvs = CameraVideoStream(src=self.url,name=self.return_user()).start()
-		print("[INFO] Init. ',self.ip_camera['username'],'\n")
+		print("[INFO] Init. ",self.ip_camera['username'],"\n")
 
 	def return_frames(self):
 		return self.cvs.read()

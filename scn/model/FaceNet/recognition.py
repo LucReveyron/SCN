@@ -13,8 +13,12 @@ resnet = InceptionResnetV1(pretrained='vggface2').eval() # initializing resnet f
 def face_match(frame, data_path): # img_path= location of photo, data_path= location of data.pt 
     # getting embedding matrix of the given img
 	img = frame
-
-	face, prob = mtcnn(img, return_prob=True) # returns cropped face and probability
+	face = None
+	#print("[DEBUG] Check a none empty frame pass : size = ",img.size)
+	# Magic number as filtering for frame dimension that produce bug for the pytorch learning
+	# For the moment we don't understand exaclty the reason....
+	if img.size > 2000:
+		face, prob = mtcnn(img, return_prob=True) # returns cropped face and probability
 
 	if face is not None:
 

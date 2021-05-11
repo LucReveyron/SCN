@@ -1,0 +1,111 @@
+<html>
+<head>
+  <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/@mdi/font@4.x/css/materialdesignicons.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
+</head>
+<body>
+  <div id="app">
+    <v-app>
+      <v-main>
+        <div>
+          <v-container>Smart Cameras Network</v-container>
+          <v-container id="app"></v-container>
+          <v-divider></v-divider>
+            
+          <v-divider></v-divider>
+        </div>
+        <v-container v-if='isHidden'>
+          <v-hover >
+            <img src="http://localhost:9999/stream">
+          </v-hover>
+        </v-container>
+        <v-container>
+        <div class="row">
+            <div v-for="(value, name) in map" class="column">
+                <template>
+                    <v-card
+                      class="mx-auto"
+                      max-width="344"
+                      outlined
+                    >
+                      <v-list-item three-line>
+                        <v-list-item-content>
+                          <div class="overline mb-4">
+                            {{ name }}
+                          </div>
+                          <v-list-item-title class="headline mb-1">
+                            Presence:
+                          </v-list-item-title>
+                            <li v-for="name in value">
+                                {{ name }}
+                            </li>
+                          <v-list-item-subtitle>
+                              
+                          </v-list-item-subtitle>
+                        </v-list-item-content>
+                  
+                        <v-list-item-avatar
+                          tile
+                          size="80"
+                          color="grey"
+                        ></v-list-item-avatar>
+                      </v-list-item>
+                  
+                      <v-card-actions>
+                        <v-btn
+                          outlined
+                          rounded
+                          text
+                          v-on:click="isHidden = !isHidden">
+                          Start
+                        </v-btn>
+                      </v-card-actions>
+                    </v-card>
+                  </template>
+            </div>
+        </div>
+      </v-container>
+
+      </v-main>
+    </v-app>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script>
+    new Vue({
+      el: '#app',
+      vuetify: new Vuetify(),
+      data () {
+        return {
+          map: null,
+          roomList: ["room1","room2","room3"],
+          crew: ["Chloé","Jean","Pierre"],
+          isHidden: false
+        }
+      },
+      methods: {
+        btcTrkAPICall: function () {
+          axios
+          .get("http://localhost:9999/map")
+          .then((response)=> (this.map = response.data))
+          .catch((error)=> (console.log(error)))
+        },
+        intervalFetchData: function () {
+            setInterval(() => {    
+                this.btcTrkAPICall();
+                }, 2000);    
+        }
+      },
+      mounted () {
+          this.btcTrkAPICall();
+          // Run the intervalFetchData function once to set the interval time for later refresh
+          this.intervalFetchData();
+        }
+    })
+  </script>
+</body>
+</html>

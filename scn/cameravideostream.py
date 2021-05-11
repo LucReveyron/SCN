@@ -12,7 +12,7 @@ class CameraVideoStream:
 	def __init__(self, src=0, name="CameraVideoStream"):
 		# initialize the video camera stream and read the first frame
 		# from the stream
-		print('[Info] Stream from:', name)
+		print('[INFO] Stream from:', name)
 
 		self.stream = cv2.VideoCapture(src)
 

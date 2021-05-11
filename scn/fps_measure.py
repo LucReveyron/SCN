@@ -12,7 +12,7 @@ from centroidtracker import CentroidTracker
 
 def main():
 	# Create csv file to store result
-	with open('fps_measure2.csv', 'w', newline='') as file:
+	with open('measure/fps_measure2.csv', 'w', newline='') as file:
 		writer = csv.writer(file)
 		writer.writerow(["Exp", "fps"])
 		print("Measurement Start\n")
