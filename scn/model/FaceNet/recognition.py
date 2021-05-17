@@ -17,7 +17,8 @@ def face_match(frame, data_path): # img_path= location of photo, data_path= loca
 	#print("[DEBUG] Check a none empty frame pass : size = ",img.size)
 	# Magic number as filtering for frame dimension that produce bug for the pytorch learning
 	# For the moment we don't understand exaclty the reason....
-	if img.size > 2000:
+
+	if img.size > 10000:
 		face, prob = mtcnn(img, return_prob=True) # returns cropped face and probability
 
 	if face is not None:

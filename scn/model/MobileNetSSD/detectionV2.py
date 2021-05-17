@@ -38,7 +38,7 @@ class Detector:
 		self.bounding_box = []
 		# resize the frame to have a maximum width of 400 pixels, then
 		# grab the frame dimensions and construct a blob
-		frame = resize(frame, width=400)
+		#frame = resize(frame, width=400)  # Check if necessary or not !!!!!!!!!!!!!
 		(h, w) = frame.shape[:2]
 		blob = cv2.dnn.blobFromImage(cv2.resize(frame, (300, 300)),
 			0.007843, (300, 300), 127.5)

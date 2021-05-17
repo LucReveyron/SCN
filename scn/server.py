@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Response
+from fastapi import FastAPI, Response, WebSocket
 from fastapi.responses import FileResponse, StreamingResponse
 from pydantic import BaseModel
 import uvicorn
@@ -36,12 +36,10 @@ async def return_base_presence():
 def generator(camera_id):
     while(True):
         img = scn.return_frame(camera)
-        print(img)
-        if img is not None:
-            npFrame = np.frombuffer(img, np.uint8)
-            frame = cv2.imdecode(npFrame, cv2.IMREAD_COLOR)
 
-            (flag, encodedImage) = cv2.imencode(".jpg", frame)
+        if np.shape(img) != ():
+
+            (flag, encodedImage) = cv2.imencode(".jpg", img)
             if not flag:
                 continue
 
@@ -51,13 +49,12 @@ def generator(camera_id):
 @app.get("/app")
 def read_index():
     return FileResponse("app.html")
-
+"""
 @app.get("/map")
 async def create_item():
     scn.update()
     baseMap = await return_base_presence()
-    print(baseMap)
-    
+    #print(baseMap)
     return baseMap
 
 @app.get("/stream")
@@ -66,6 +63,15 @@ def video_feed():
     # type (mime type)
     # return StreamingResponse(generate())
     return StreamingResponse(generator(camera[0]), media_type="multipart/x-mixed-replace;boundary=frame")
+"""
+
+@app.websocket("/ws/map")
+async def websocket_endpoint(websocket: WebSocket):
+    await websocket.accept()
+    while True:
+        scn.update()
+        baseMap = await return_base_presence()
+        await websocket.send_json(baseMap)
 
 if __name__ == '__main__':
-    uvicorn.run("server:app", host="0.0.0.0", port=9999, reload=True)
+    uvicorn.run("server:app", host="0.0.0.0", port=8000, reload=True)

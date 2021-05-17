@@ -18,7 +18,7 @@
         </div>
         <v-container v-if='isHidden'>
           <v-hover >
-            <img src="http://localhost:9999/stream">
+            <!--<img src="http://localhost:8000/stream">-->
           </v-hover>
         </v-container>
         <v-container>
@@ -81,13 +81,14 @@
       vuetify: new Vuetify(),
       data () {
         return {
-          map: null,
-          roomList: ["room1","room2","room3"],
-          crew: ["Chloé","Jean","Pierre"],
+          streamConnection: null,
+          mapConnection: null,
+          map: {},
           isHidden: false
         }
       },
       methods: {
+        /*
         btcTrkAPICall: function () {
           axios
           .get("http://localhost:9999/map")
@@ -98,12 +99,33 @@
             setInterval(() => {    
                 this.btcTrkAPICall();
                 }, 2000);    
+        }*/
+      },
+      created: function() {
+        console.log("Starting connection to WebSockets")
+        console.log(this.map);
+        this.mapConnection = new WebSocket("ws://localhost:8000/ws/map")
+        this.mapConnection.onmessage = function(event) {
+          var msg = JSON.parse(event.data);
+          var vm = this;
+          Object.keys(msg).forEach(function(key) {
+            console.log('Key : ' + key + ', Value : ' + msg[key])
+            vm.map[key] = msg[key]
+          })
         }
+        /*
+        this.mapConnection.onopen = function(event) {
+          console.log("Successfully connected to the echo websocket server...")
+        }
+        this.mapConnection.onclose = function(e) {
+          console.log('mapConnection Disconnected!');
+        }
+        */
       },
       mounted () {
-          this.btcTrkAPICall();
+          //this.btcTrkAPICall();
           // Run the intervalFetchData function once to set the interval time for later refresh
-          this.intervalFetchData();
+          //this.intervalFetchData();
         }
     })
   </script>
