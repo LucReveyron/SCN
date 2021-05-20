@@ -10,10 +10,10 @@
     <v-app>
       <v-main>
         <div>
-          <v-container>Smart Cameras Network</v-container>
+          <v-container>Smart Cameras Network {{ map }}</v-container>
           <v-container id="app"></v-container>
           <v-divider></v-divider>
-            
+          
           <v-divider></v-divider>
         </div>
         <v-container v-if='isHidden'>
@@ -79,15 +79,13 @@
     new Vue({
       el: '#app',
       vuetify: new Vuetify(),
-      data () {
-        return {
+      data: {
           streamConnection: null,
           mapConnection: null,
           map: {},
-          isHidden: false
-        }
+          isHidden: true
       },
-      methods: {
+      //methods: {
         /*
         btcTrkAPICall: function () {
           axios
@@ -100,19 +98,24 @@
                 this.btcTrkAPICall();
                 }, 2000);    
         }*/
-      },
-      created: function() {
+      //},
+      beforeMount: function() {
         console.log("Starting connection to WebSockets")
-        console.log(this.map);
+        var vm = this;
         this.mapConnection = new WebSocket("ws://localhost:8000/ws/map")
         this.mapConnection.onmessage = function(event) {
+          vm.map = {};
+          dict_room = {};
           var msg = JSON.parse(event.data);
-          var vm = this;
           Object.keys(msg).forEach(function(key) {
-            console.log('Key : ' + key + ', Value : ' + msg[key])
-            vm.map[key] = msg[key]
-          })
+            //console.log('Key : ' + key + ', Value : ' + msg[key])
+            dict_room[key] = msg[key];
+            //vm.map.push({ cam : names});
+            //vm.map.push(dict_room);
+          });
+          vm.map = dict_room;
         }
+        console.log(this.map);
         /*
         this.mapConnection.onopen = function(event) {
           console.log("Successfully connected to the echo websocket server...")
@@ -121,12 +124,13 @@
           console.log('mapConnection Disconnected!');
         }
         */
-      },
-      mounted () {
+      }//,
+      //mounted () {
+
           //this.btcTrkAPICall();
           // Run the intervalFetchData function once to set the interval time for later refresh
           //this.intervalFetchData();
-        }
+        //}
     })
   </script>
 </body>
