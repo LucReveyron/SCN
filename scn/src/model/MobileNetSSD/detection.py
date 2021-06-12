@@ -7,7 +7,7 @@
 import numpy as np 
 import cv2
 
-from model.FaceNet.recognition import face_match
+from src.model.FaceNet.recognition import face_match
 
 class Detector:
 	# initialize the list of class labels MobileNet SSD was trained to
@@ -26,8 +26,8 @@ class Detector:
 	def __init__(self,reco = True):
 		print("[INFO] loading model...")
 		# Path to model 
-		self.model = 'model/MobileNetSSD/MobileNetSSD_deploy.caffemodel'
-		self.prototxt = 'model/MobileNetSSD/MobileNetSSD_deploy.prototxt'
+		self.model = 'src/model/MobileNetSSD/MobileNetSSD_deploy.caffemodel'
+		self.prototxt = 'src/model/MobileNetSSD/MobileNetSSD_deploy.prototxt'
 		self.net = cv2.dnn.readNetFromCaffe(self.prototxt, self.model)
 		self.Confidence = 0.2
 		self.person_frame = []

@@ -1,7 +1,7 @@
 import cv2
 import numpy as np
 
-from smart_camera import SmartCamera
+from src.smart_camera import SmartCamera
 
 def main():
 	scn = SmartCamera()
@@ -22,11 +22,11 @@ def main():
 						print(person)
 
 			i += 1
-		"""
+		
 		frame = scn.display()
 		scn.return_presence()
 		cv2.imshow("Display", frame)
-		"""
+		
 		if cv2.waitKey(1) & 0xFF == ord('q'):
 			break
 

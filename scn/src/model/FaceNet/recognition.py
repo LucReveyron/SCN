@@ -1,3 +1,5 @@
+""" This module use MTCNN and resnet to recognize people on frames 
+"""
 
 import os
 import numpy as np
@@ -7,6 +9,8 @@ from torchvision import datasets
 from torch.utils.data import DataLoader
 from PIL import Image
 
+MIN_SIZE = 10000 # To filter artefact from detection stage (too small images that cannot be usable)
+
 mtcnn = MTCNN(image_size=240, margin=0, min_face_size=20) # initializing mtcnn for face detection
 resnet = InceptionResnetV1(pretrained='vggface2').eval() # initializing resnet for face img to embeding conversion
 
@@ -15,10 +19,8 @@ def face_match(frame, data_path): # img_path= location of photo, data_path= loca
 	img = frame
 	face = None
 	#print("[DEBUG] Check a none empty frame pass : size = ",img.size)
-	# Magic number as filtering for frame dimension that produce bug for the pytorch learning
-	# For the moment we don't understand exaclty the reason....
 
-	if img.size > 10000:
+	if img.size > MIN_SIZE:
 		face, prob = mtcnn(img, return_prob=True) # returns cropped face and probability
 
 	if face is not None:

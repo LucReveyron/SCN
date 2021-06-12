@@ -8,7 +8,7 @@
 import cv2
 import toml
 
-from cameravideostream import CameraVideoStream
+from src.cameravideostream import CameraVideoStream
 
 class IpCamera:
 	def __init__(self):
@@ -61,7 +61,6 @@ class IpCameraManager:
 		print("[INFO] Camera list load \n")
 
 	def start_capture(self):
-		print(self.camera_list)
 		for ip_camera in self.camera_list:
 			self.camera_list[ip_camera].capture()
 

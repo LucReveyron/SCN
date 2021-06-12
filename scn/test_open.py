@@ -1,9 +1,9 @@
 import cv2
 import numpy as np
 
-from utils import resize, get_one_image
-from ipcamera import IpCamera, IpCameraManager
-from model.OpenPifPaf.openpifpaf_predict import OpenPredict
+from src.utils import resize, get_one_image
+from src.ipcamera import IpCamera, IpCameraManager
+from src.model.OpenPifPaf.openpifpaf_predict import OpenPredict
 
 
 def main():

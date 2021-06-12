@@ -1,12 +1,12 @@
 # Config file for the ip cameras
 
 [camera1]
-ip = "192.168.1.48"
+ip = "192.168.1.8"
 username = "Smartcap1"
 password = "ProjectSCN2021"
 
 [camera2]
-ip = "192.168.1.47"
+ip = "192.168.1.9"
 username = "Smartcap2"
 password = "ProjectSCN2021"
 

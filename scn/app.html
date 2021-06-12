@@ -10,15 +10,15 @@
     <v-app>
       <v-main>
         <div>
-          <v-container>Smart Cameras Network {{ map }}</v-container>
+          <v-container>Smart Cameras Network</v-container>
           <v-container id="app"></v-container>
           <v-divider></v-divider>
           
           <v-divider></v-divider>
         </div>
-        <v-container v-if='isHidden'>
+        <v-container v-if='!isHidden'>
           <v-hover >
-            <!--<img src="http://localhost:8000/stream">-->
+            <img id="streamer-image" src="">
           </v-hover>
         </v-container>
         <v-container>
@@ -58,7 +58,7 @@
                           outlined
                           rounded
                           text
-                          v-on:click="isHidden = !isHidden">
+                          v-on:click="hidden(); call_frames(name)">
                           Start
                         </v-btn>
                       </v-card-actions>
@@ -80,7 +80,7 @@
       el: '#app',
       vuetify: new Vuetify(),
       data: {
-          streamConnection: null,
+          streamConnection: {},
           mapConnection: null,
           map: {},
           isHidden: true
@@ -102,35 +102,66 @@
       beforeMount: function() {
         console.log("Starting connection to WebSockets")
         var vm = this;
-        this.mapConnection = new WebSocket("ws://localhost:8000/ws/map")
+        var init = 0;
+        //this.streamConnection = new WebSocket("ws://localhost:8000/ws/stream/Smartcap1")
+        this.mapConnection = new WebSocket("ws://localhost:9999/ws/map")
+
+        console.log(this.mapConnection)
+        
         this.mapConnection.onmessage = function(event) {
           vm.map = {};
           dict_room = {};
+          dict_connect = {};
           var msg = JSON.parse(event.data);
           Object.keys(msg).forEach(function(key) {
             //console.log('Key : ' + key + ', Value : ' + msg[key])
             dict_room[key] = msg[key];
-            //vm.map.push({ cam : names});
-            //vm.map.push(dict_room);
+            if (init == 0){
+              path = 'ws://localhost:9999/ws/stream/' + key;
+              console.log(path);
+              dict_connect[key] = new WebSocket(path);
+            }
           });
           vm.map = dict_room;
-        }
-        console.log(this.map);
-        /*
-        this.mapConnection.onopen = function(event) {
-          console.log("Successfully connected to the echo websocket server...")
-        }
-        this.mapConnection.onclose = function(e) {
-          console.log('mapConnection Disconnected!');
-        }
-        */
-      }//,
-      //mounted () {
 
-          //this.btcTrkAPICall();
-          // Run the intervalFetchData function once to set the interval time for later refresh
-          //this.intervalFetchData();
-        //}
+          if (init == 0){
+            console.log("Finish init");
+            vm.streamConnection = dict_connect;
+            init = 1;
+            Object.entries(vm.streamConnection).forEach(([k,v]) => {
+              console.log(k,v);
+            });
+          }
+        }
+      },
+      unmounted: function() {
+        console.log("close websocket");
+        this.mapConnection.close();
+
+      },
+      methods: {
+        hidden: function(){
+          this.isHidden = !this.isHidden;
+        },
+        call_frames: function (key) {
+          if(this.isHidden == false){
+            console.log("on!");
+            var dict_ws = this.streamConnection;
+            console.log(dict_ws[key]);
+            dict_ws[key].onmessage = function(e) {
+              console.log("In stream");
+		          const image_elem = document.getElementById("streamer-image");
+              image_elem.src = e.data;
+            }
+	        }
+          if(this.isHidden == true){
+            var dict_ws = this.streamConnection
+            console.log("off");
+            dict_ws[key].close();
+          }
+        }
+      },
+      
     })
   </script>
 </body>

@@ -3,12 +3,12 @@
 import time
 import csv
 import cv2
-from utils import resize, FPS
-from ipcamera import IpCamera
+from src.utils import resize, FPS
+from src.ipcamera import IpCamera
 #from model.MobileNetSSD.detection import Detector
-from model.MobileNetSSD.detectionV2 import Detector
-from model.FaceNet.recognition import face_match
-from centroidtracker import CentroidTracker
+from src.model.MobileNetSSD.detectionV2 import Detector
+from src.model.FaceNet.recognition import face_match
+from src.centroidtracker import CentroidTracker
 
 def main():
 	# Create csv file to store result

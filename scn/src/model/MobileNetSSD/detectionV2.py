@@ -7,7 +7,7 @@
 import numpy as np 
 import cv2
 
-from utils import resize
+from src.utils import resize
 
 
 class Detector:
@@ -27,8 +27,8 @@ class Detector:
 	def __init__(self):
 		print("[INFO] loading model...")
 		# Path to model 
-		self.model = 'model/MobileNetSSD/MobileNetSSD_deploy.caffemodel'
-		self.prototxt = 'model/MobileNetSSD/MobileNetSSD_deploy.prototxt'
+		self.model = 'src/model/MobileNetSSD/MobileNetSSD_deploy.caffemodel'
+		self.prototxt = 'src/model/MobileNetSSD/MobileNetSSD_deploy.prototxt'
 		self.net = cv2.dnn.readNetFromCaffe(self.prototxt, self.model)
 		self.Confidence = 0.2
 		self.bounding_box = []

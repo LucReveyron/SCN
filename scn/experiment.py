@@ -5,11 +5,11 @@ import csv
 
 from collections import OrderedDict
 
-from utils import get_one_image, FPS
-from ipcamera import IpCamera, IpCameraManager
-from model.MobileNetSSD.detectionV2 import Detector
-from centroidtracker import CentroidTracker
-from model.FaceNet.recognition import face_match
+from src.utils import get_one_image, FPS
+from src.ipcamera import IpCamera, IpCameraManager
+from src.model.MobileNetSSD.detectionV2 import Detector
+from src.centroidtracker import CentroidTracker
+from src.model.FaceNet.recognition import face_match
 
 CLOSER = 0.7 # Distance allowed to trust the face_match
 
