@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Response, WebSocket, WebSocketDisconnect
+from fastapi import FastAPI, Response, WebSocket, WebSocketDisconnect, File, UploadFile
 from fastapi.responses import FileResponse, StreamingResponse
 from fastapi.encoders import jsonable_encoder
 from fastapi.responses import JSONResponse
@@ -6,10 +6,13 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
 import cv2
+import re
 import base64
 import asyncio
 import numpy as np
+from typing import List
 from src.smart_camera import SmartCamera
+from src.model.FaceNet.finetune.newuser import saveUser
 
 import uvicorn
 
@@ -46,21 +49,16 @@ ID = 0
 class cameraID(BaseModel):
     id : int
 
+# BaseModel for new user 
+class newUser(BaseModel):
+    user: str
+
+userManager = saveUser()
+
+class Picture(BaseModel):
+    url: str
+
 # Generate bytes from the camera frames
-def generator(id):
-    while(True):
-        camera_id = 'Smartcap' + str(id)
-        img = scn.return_frame(camera_id)
-
-        if np.shape(img) != ():
-
-            (flag, encodedImage) = cv2.imencode(".jpg", img)
-            if not flag:
-                continue
-
-            yield (b'--frame\r\n' b'Content-Type: image/jpeg\r\n\r\n' +
-                bytearray(encodedImage) + b'\r\n')
-
 def current_frame(id):
     camera_id = 'Smartcap' + str(id)
     img = scn.return_frame(camera_id)
@@ -99,9 +97,40 @@ async def send_status():
 # Set which camera to stream
 @app.post("/choice")
 async def select_stream(camID: cameraID):
-    # Add response button !!
     ID = camID.id
     return camID
+
+# Add new user to database
+@app.post("/username")
+async def select_stream(newuser: newUser):
+    # Object to manage creation of dateset for new user
+    if(userManager.username != ""):
+        print("augmented !\n")
+        userManager.augmentation()
+        userManager.reset()
+        print("Reset...\n")
+
+    userManager.add(newuser.user)
+    return newuser
+
+# Add picture to database
+@app.post("/picture")
+async def select_stream(img: Picture):
+    # 1, information extraction
+    result = re.search("data:image/(?P<ext>.*?);base64,(?P<data>.*)", img.url, re.DOTALL)
+    if result:
+        ext = result.groupdict().get("ext")
+        data = result.groupdict().get("data")
+
+    else:
+        raise Exception("Do not parse!")
+
+    # 2, base64 decoding
+    img_str = base64.urlsafe_b64decode(data)
+    nparr = np.fromstring(img_str, np.uint8)
+    img_np = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
+    userManager.save_picture(img_np)
+
 
 @app.websocket("/ws/stream/{camID}")
 async def websocket_endpoint(websocket: WebSocket, camID: int):

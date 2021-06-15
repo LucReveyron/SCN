@@ -7,7 +7,7 @@ import os
 import cv2
 
 def noisy(noise_typ,image):
-   if noise_typ == "gauss":
+  if noise_typ == "gauss":
       row,col,ch= image.shape
       mean = 0
       var = 0.1
@@ -16,7 +16,7 @@ def noisy(noise_typ,image):
       gauss = gauss.reshape(row,col,ch)
       noisy = image + gauss
       return noisy
-   elif noise_typ == "s&p":
+  elif noise_typ == "s&p":
       row,col,ch = image.shape
       s_vs_p = 0.5
       amount = 0.004

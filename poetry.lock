@@ -365,6 +365,17 @@ optional = false
 python-versions = ">=3.4"
 
 [[package]]
+name = "python-multipart"
+version = "0.0.5"
+description = "A streaming multipart parser for Python"
+category = "main"
+optional = false
+python-versions = "*"
+
+[package.dependencies]
+six = ">=1.4.0"
+
+[[package]]
 name = "pytz"
 version = "2021.1"
 description = "World timezone definitions, modern and historical"
@@ -523,7 +534,7 @@ testing = ["pytest (>=4.6)", "pytest-checkdocs (>=1.2.3)", "pytest-flake8", "pyt
 [metadata]
 lock-version = "1.1"
 python-versions = "3.8"
-content-hash = "6b27d231ff33f97694a3082e543f49ceaaa09e9789b2b2439775dd352782face"
+content-hash = "e2d896d7641e459a23e7c9bf2dd914dbaeb25a47ef0dff0a145c32d3f9e42cce"
 
 [metadata.files]
 aiofiles = [
@@ -816,6 +827,9 @@ python-dateutil = [
 ]
 python-json-logger = [
     {file = "python-json-logger-2.0.1.tar.gz", hash = "sha256:f26eea7898db40609563bed0a7ca11af12e2a79858632706d835a0f961b7d398"},
+]
+python-multipart = [
+    {file = "python-multipart-0.0.5.tar.gz", hash = "sha256:f7bb5f611fc600d15fa47b3974c8aa16e93724513b49b5f95c81e6624c83fa43"},
 ]
 pytz = [
     {file = "pytz-2021.1-py2.py3-none-any.whl", hash = "sha256:eb10ce3e7736052ed3623d49975ce333bcd712c7bb19a58b9e2089d4057d0798"},
