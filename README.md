@@ -30,6 +30,7 @@ Launch the backend in the 'scn' folder:
 ```bash
 poetry run python app.py
 ```
+
 ## Contributing
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
 
