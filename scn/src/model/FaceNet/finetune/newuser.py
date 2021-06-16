@@ -1,3 +1,6 @@
+''' Class to implement smileV2.py functionnality
+'''
+
 import os
 import cv2
 from src.model.FaceNet.finetune.noise_generator import noisy

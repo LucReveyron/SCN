@@ -1,6 +1,5 @@
 ''' Function to add some type of noise to picture. Mostly take from : 
 https://stackoverflow.com/questions/22937589/how-to-add-noise-gaussian-salt-and-pepper-etc-to-image-in-python-with-opencv
-
 '''
 import numpy as np
 import os

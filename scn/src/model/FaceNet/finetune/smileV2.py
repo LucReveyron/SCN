@@ -1,3 +1,6 @@
+''' Module to create dataset for FaceNet (with data augmentation)
+'''
+
 import os
 import cv2
 
