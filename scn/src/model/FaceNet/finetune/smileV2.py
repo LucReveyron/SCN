@@ -33,10 +33,10 @@ print('When you have finish press ESC !\n')
 list_pictures = []
 
 #cam = cv2.VideoCapture(0)
-adress = '192.168.1.24'
+adress = '192.168.1.23'
 user = 'Smartcap1'
 password = 'ProjectSCN2021'
-cam = cv2.VideoCapture('rtsp://{user}:{passw}@{adress}/stream2')
+cam = cv2.VideoCapture('rtsp://Smartcap1:ProjectSCN2021@192.168.1.23/stream2')
 
 cv2.namedWindow("test")
 

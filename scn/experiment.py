@@ -1,3 +1,6 @@
+""" Module to experiment with each module and measure performance
+"""
+
 import cv2
 import numpy as np
 import time

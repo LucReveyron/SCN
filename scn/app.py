@@ -1,3 +1,6 @@
+""" Server that manage connection with the front-end
+"""
+
 from fastapi import FastAPI, Response, WebSocket, WebSocketDisconnect, File, UploadFile
 from fastapi.responses import FileResponse, StreamingResponse
 from fastapi.encoders import jsonable_encoder

@@ -13,7 +13,8 @@ from src.model.MobileNetSSD.detectionV2 import Detector
 from src.centroidtracker import CentroidTracker
 from src.model.FaceNet.recognition import face_match
 
-CLOSER = 0.8 # Distance allowed to trust the face_match
+CLOSER = 0.6 # Distance allowed to trust the face_match
+DEBUG = 0 	 # Allow comments for debbuging
 
 class SmartCamera:
 	def __init__(self):
@@ -30,30 +31,29 @@ class SmartCamera:
 		self.all_people = {}
 		self.all_boxes = {}
 
-		# Local to one per one camera
+		self.current_people = {}
+
+		# Provisory save
 		self.people_tracked = {}
 		self.boxes = {}
 
+		# Init the dictionnary for the centroid tracking
 		for camera in self.cameras.return_list():
 			self.people_tracked[camera] = OrderedDict()
 			self.boxes[camera] = OrderedDict()
 
 	def clear(self):
-    	#clear the frames and boxes saved during previous update
+    	# Clear the frames and boxes saved during previous update
 		self.frames.clear()
 		self.boxes.clear()
 		self.all_boxes.clear()
 
 	def update(self):
-		#print("[DEBUG] Current cameras list : ",self.cameras.return_list(), "\n")
+		if(DEBUG):
+			print("[DEBUG] Current cameras list : ",self.cameras.return_list(), "\n")
 
 		self.clear()
 		for camera in self.camera_list:
-
-			if camera in self.people_tracked and camera in self.all_people:
-				# Recover previous states : People tracked
-				self.people_tracked[camera] = self.all_people[camera]
-				del self.all_people[camera]
 
 			# Pool the next frame 
 			self.frames[camera] = self.cameras.return_specific_frame(camera)
@@ -62,31 +62,34 @@ class SmartCamera:
 			self.frames[camera], bounding_box = self.detector.detect(self.frames[camera])
 
 			if bounding_box:
-				#print('bounding : ',len(bounding_box),'\n')
+
 				people, self.boxes[camera] = self.tracker.update(bounding_box)
 
 				for person_ID in people.keys():
-
-					if person_ID not in self.people_tracked.keys():
+					if person_ID not in self.people_tracked[camera].keys():
 						self.people_tracked[camera][person_ID] = None
 
 				for person_ID in self.people_tracked[camera]:
-
 					if self.people_tracked[camera][person_ID] == None and person_ID in self.boxes[camera].keys() :
-						
 						# Extrat person from the frame
 						part_frame = self.frames[camera]
 						part_frame = part_frame[self.boxes[camera][person_ID][1]:self.boxes[camera][person_ID][3],self.boxes[camera][person_ID][0]:self.boxes[camera][person_ID][2]]
 
 						# Try to recognize the person
 						result = face_match(part_frame,'./src/model/FaceNet/finetune/data.pt')
-						#print("[DEBUG] Match : ",result[1], "\n")
+
+						if(DEBUG):
+							print("[DEBUG] Match : ",result, "\n")
+
 						if result[0] is not None and result[1] > CLOSER:
 							# Define the name of the person
-							self.people_tracked[camera][person_ID] = result[0]
-							
+							if(result[0] not in self.people_tracked[camera].values()):
+								self.people_tracked[camera][person_ID] = result[0]
+    			
 				self.all_people[camera] = self.people_tracked[camera]
 				self.all_boxes[camera] = self.boxes[camera]
+			elif(camera in self.all_people):
+				del self.all_people[camera]
 
 	def return_camera_list(self):
 		return self.camera_list
@@ -127,7 +130,8 @@ def draw_box(frame, boxes, people):
 
 		cv2.rectangle(frame, (box[0], box[1]), (box[2], box[3]),
 			(255, 0, 0), thick)
-		#print("[DEBUG] name is :",len(people))
+		if(DEBUG):
+			print("[DEBUG] name is :",len(people))
 
 		if index in people.keys():
 			name = people[index]
