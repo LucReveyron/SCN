@@ -81,7 +81,7 @@ class SmartCamera:
 						if(DEBUG):
 							print("[DEBUG] Match : ",result, "\n")
 
-						if result[0] is not None and result[1] > CLOSER:
+						if result[0] is not None and result[1] < CLOSER:
 							# Define the name of the person
 							if(result[0] not in self.people_tracked[camera].values()):
 								self.people_tracked[camera][person_ID] = result[0]
